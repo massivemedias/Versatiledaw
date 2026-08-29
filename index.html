@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Versatile DAW</title>
+  <title>Versatile DAW - Moog Edition</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,8 +11,20 @@
     <header class="header">
       <div class="brand">
         <h1>VERSATILE</h1>
-        <span class="badge">BASSLINE SYNTH</span>
+        <span class="badge">MOOG LADDER ENGINE</span>
       </div>
+
+      <div class="preset-selector-wrap">
+        <label for="presetSelect">MOOG PRESET</label>
+        <select id="presetSelect">
+          <option value="minimoog">Minimoog Model D (Fat Bass)</option>
+          <option value="sub37">Moog Sub 37 (Dark Disco Drive)</option>
+          <option value="taurus">Moog Taurus (Sub Stomp)</option>
+          <option value="grandmother">Moog Grandmother (Pluck)</option>
+          <option value="mother32">Moog Mother-32 (Raw Acid)</option>
+        </select>
+      </div>
+
       <div class="transport">
         <button id="playBtn" class="btn play-btn">PLAY</button>
         <div class="bpm-box">
@@ -24,44 +36,78 @@
     </header>
 
     <main class="rack">
-      <!-- MODULE FILTRE & ENV FILTRE -->
+      <!-- SECTION OSCILLATEURS & MIXER -->
       <section class="module">
         <div class="module-header">
-          <h2>FILTER & MODULATION</h2>
+          <h2>OSCILLATOR BANK & DRIVE</h2>
         </div>
-        <div class="knob-grid">
+        <div class="rack-row">
+          <div class="osc-card">
+            <span class="group-title">OSC 1</span>
+            <div class="osc-controls">
+              <select id="osc1Wave" class="wave-select">
+                <option value="sawtooth">Sawtooth</option>
+                <option value="square">Square</option>
+                <option value="triangle">Triangle</option>
+              </select>
+              <div class="knob-wrap" data-param="osc1Octave" data-min="-2" data-max="2" data-val="0" data-step="1" data-unit="Oct" data-label="Octave"></div>
+            </div>
+          </div>
+
+          <div class="osc-card">
+            <span class="group-title">OSC 2</span>
+            <div class="osc-controls">
+              <select id="osc2Wave" class="wave-select">
+                <option value="sawtooth">Sawtooth</option>
+                <option value="square">Square</option>
+                <option value="triangle">Triangle</option>
+              </select>
+              <div class="knob-wrap" data-param="osc2Octave" data-min="-2" data-max="2" data-val="0" data-step="1" data-unit="Oct" data-label="Octave"></div>
+              <div class="knob-wrap" data-param="osc2Detune" data-min="-50" data-max="50" data-val="7" data-step="1" data-unit="ct" data-label="Detune"></div>
+            </div>
+          </div>
+
           <div class="knob-group">
-            <span class="group-title">FILTER</span>
+            <span class="group-title">MIXER & DRIVE</span>
             <div class="knobs">
-              <div class="knob-wrap" data-param="filterCutoff" data-min="20" data-max="15000" data-val="1200" data-step="10" data-unit="Hz" data-label="Cutoff"></div>
-              <div class="knob-wrap" data-param="filterRes" data-min="0.1" data-max="25" data-val="6" data-step="0.1" data-unit="" data-label="Res (Q)"></div>
-              <div class="knob-wrap" data-param="filterEnvAmt" data-min="-8000" data-max="8000" data-val="4000" data-step="50" data-unit="Hz" data-label="Env Amt"></div>
+              <div class="knob-wrap" data-param="oscMix" data-min="0" data-max="1" data-val="0.5" data-step="0.01" data-unit="" data-label="Osc Mix"></div>
+              <div class="knob-wrap" data-param="subLevel" data-min="0" data-max="1" data-val="0.3" data-step="0.01" data-unit="" data-label="Sub Osc"></div>
+              <div class="knob-wrap" data-param="drive" data-min="0" data-max="10" data-val="2.5" data-step="0.1" data-unit="" data-label="Ladder Drive"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION FILTRE 24dB & MODULATIONS -->
+      <section class="module">
+        <div class="module-header">
+          <h2>MOOG 24dB LADDER FILTER & ADSR</h2>
+        </div>
+        <div class="rack-row">
+          <div class="knob-group">
+            <span class="group-title">LADDER VCF (24dB)</span>
+            <div class="knobs">
+              <div class="knob-wrap" data-param="filterCutoff" data-min="20" data-max="14000" data-val="900" data-step="10" data-unit="Hz" data-label="Cutoff"></div>
+              <div class="knob-wrap" data-param="filterRes" data-min="0.5" data-max="18" data-val="7" data-step="0.1" data-unit="" data-label="Resonance"></div>
+              <div class="knob-wrap" data-param="filterEnvAmt" data-min="-8000" data-max="8000" data-val="3500" data-step="50" data-unit="Hz" data-label="Contour"></div>
             </div>
           </div>
 
           <div class="knob-group">
             <span class="group-title">FILTER ENVELOPE</span>
             <div class="knobs">
-              <div class="knob-wrap" data-param="fAttack" data-min="0.001" data-max="2" data-val="0.005" data-step="0.005" data-unit="s" data-label="Attack"></div>
-              <div class="knob-wrap" data-param="fDecay" data-min="0.01" data-max="2" data-val="0.18" data-step="0.01" data-unit="s" data-label="Decay"></div>
-              <div class="knob-wrap" data-param="fSustain" data-min="0" data-max="1" data-val="0.1" data-step="0.01" data-unit="%" data-label="Sustain"></div>
-              <div class="knob-wrap" data-param="fRelease" data-min="0.01" data-max="3" data-val="0.15" data-step="0.01" data-unit="s" data-label="Release"></div>
+              <div class="knob-wrap" data-param="fAttack" data-min="0.001" data-max="1.5" data-val="0.005" data-step="0.005" data-unit="s" data-label="Attack"></div>
+              <div class="knob-wrap" data-param="fDecay" data-min="0.01" data-max="2" data-val="0.22" data-step="0.01" data-unit="s" data-label="Decay"></div>
+              <div class="knob-wrap" data-param="fSustain" data-min="0" data-max="1" data-val="0.05" data-step="0.01" data-unit="%" data-label="Sustain"></div>
+              <div class="knob-wrap" data-param="fRelease" data-min="0.01" data-max="2" data-val="0.12" data-step="0.01" data-unit="s" data-label="Release"></div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <!-- MODULE AMPLITUDE ADSR -->
-      <section class="module">
-        <div class="module-header">
-          <h2>AMPLIFIER ENVELOPE</h2>
-        </div>
-        <div class="knob-grid">
           <div class="knob-group">
-            <span class="group-title">AMP ADSR</span>
+            <span class="group-title">AMP VCA ENVELOPE</span>
             <div class="knobs">
               <div class="knob-wrap" data-param="ampAttack" data-min="0.001" data-max="1.5" data-val="0.005" data-step="0.005" data-unit="s" data-label="Attack"></div>
-              <div class="knob-wrap" data-param="ampDecay" data-min="0.01" data-max="2" data-val="0.22" data-step="0.01" data-unit="s" data-label="Decay"></div>
+              <div class="knob-wrap" data-param="ampDecay" data-min="0.01" data-max="2" data-val="0.25" data-step="0.01" data-unit="s" data-label="Decay"></div>
               <div class="knob-wrap" data-param="ampSustain" data-min="0" data-max="1" data-val="0.0" data-step="0.01" data-unit="%" data-label="Sustain"></div>
               <div class="knob-wrap" data-param="ampRelease" data-min="0.01" data-max="2" data-val="0.08" data-step="0.01" data-unit="s" data-label="Release"></div>
             </div>
@@ -69,7 +115,7 @@
         </div>
       </section>
 
-      <!-- MODULE SEQUENCEUR 16 PAS -->
+      <!-- SEQUENCEUR 16 PAS -->
       <section class="module">
         <div class="module-header">
           <h2>16-STEP SEQUENCER</h2>
