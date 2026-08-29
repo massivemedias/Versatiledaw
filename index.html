@@ -9,28 +9,71 @@
 <body>
   <div class="daw-container">
     <header class="header">
-      <h1>VERSATILE DAW</h1>
+      <div class="brand">
+        <h1>VERSATILE</h1>
+        <span class="badge">BASSLINE SYNTH</span>
+      </div>
       <div class="transport">
-        <button id="playBtn" class="btn primary">PLAY</button>
-        <div class="control-group">
-          <label for="bpm">BPM</label>
-          <input type="number" id="bpm" value="124" min="60" max="200">
+        <button id="playBtn" class="btn play-btn">PLAY</button>
+        <div class="bpm-box">
+          <span class="label">TEMPO</span>
+          <input type="number" id="bpm" value="124" min="40" max="240">
+          <span class="unit">BPM</span>
         </div>
       </div>
     </header>
 
     <main class="rack">
-      <section class="module synth-params">
-        <h2>BASS ENGINE</h2>
-        <div class="param-row">
-          <label>Cutoff: <input type="range" id="cutoff" min="50" max="8000" value="1500"></label>
-          <label>Resonance: <input type="range" id="resonance" min="0" max="20" step="0.5" value="6"></label>
-          <label>Decay: <input type="range" id="decay" min="0.05" max="0.8" step="0.01" value="0.2"></label>
+      <!-- MODULE FILTRE & ENV FILTRE -->
+      <section class="module">
+        <div class="module-header">
+          <h2>FILTER & MODULATION</h2>
+        </div>
+        <div class="knob-grid">
+          <div class="knob-group">
+            <span class="group-title">FILTER</span>
+            <div class="knobs">
+              <div class="knob-wrap" data-param="filterCutoff" data-min="20" data-max="15000" data-val="1200" data-step="10" data-unit="Hz" data-label="Cutoff"></div>
+              <div class="knob-wrap" data-param="filterRes" data-min="0.1" data-max="25" data-val="6" data-step="0.1" data-unit="" data-label="Res (Q)"></div>
+              <div class="knob-wrap" data-param="filterEnvAmt" data-min="-8000" data-max="8000" data-val="4000" data-step="50" data-unit="Hz" data-label="Env Amt"></div>
+            </div>
+          </div>
+
+          <div class="knob-group">
+            <span class="group-title">FILTER ENVELOPE</span>
+            <div class="knobs">
+              <div class="knob-wrap" data-param="fAttack" data-min="0.001" data-max="2" data-val="0.005" data-step="0.005" data-unit="s" data-label="Attack"></div>
+              <div class="knob-wrap" data-param="fDecay" data-min="0.01" data-max="2" data-val="0.18" data-step="0.01" data-unit="s" data-label="Decay"></div>
+              <div class="knob-wrap" data-param="fSustain" data-min="0" data-max="1" data-val="0.1" data-step="0.01" data-unit="%" data-label="Sustain"></div>
+              <div class="knob-wrap" data-param="fRelease" data-min="0.01" data-max="3" data-val="0.15" data-step="0.01" data-unit="s" data-label="Release"></div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section class="module sequencer-module">
-        <h2>16-STEP SEQUENCER</h2>
+      <!-- MODULE AMPLITUDE ADSR -->
+      <section class="module">
+        <div class="module-header">
+          <h2>AMPLIFIER ENVELOPE</h2>
+        </div>
+        <div class="knob-grid">
+          <div class="knob-group">
+            <span class="group-title">AMP ADSR</span>
+            <div class="knobs">
+              <div class="knob-wrap" data-param="ampAttack" data-min="0.001" data-max="1.5" data-val="0.005" data-step="0.005" data-unit="s" data-label="Attack"></div>
+              <div class="knob-wrap" data-param="ampDecay" data-min="0.01" data-max="2" data-val="0.22" data-step="0.01" data-unit="s" data-label="Decay"></div>
+              <div class="knob-wrap" data-param="ampSustain" data-min="0" data-max="1" data-val="0.0" data-step="0.01" data-unit="%" data-label="Sustain"></div>
+              <div class="knob-wrap" data-param="ampRelease" data-min="0.01" data-max="2" data-val="0.08" data-step="0.01" data-unit="s" data-label="Release"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE SEQUENCEUR 16 PAS -->
+      <section class="module">
+        <div class="module-header">
+          <h2>16-STEP SEQUENCER</h2>
+        </div>
         <div class="grid" id="sequencerGrid"></div>
       </section>
     </main>
