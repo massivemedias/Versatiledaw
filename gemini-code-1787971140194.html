@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini DAW Web Audio - V1</title>
+  <style>
+    body { font-family: monospace; background: #121214; color: #fff; padding: 25px; }
+    h1 { color: #00ff88; margin-bottom: 5px; }
+    .controls { margin: 20px 0; display: flex; gap: 15px; align-items: center; }
+    button#playBtn { background: #00ff88; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; }
+    input[type=number] { background: #222; border: 1px solid #444; color: #fff; padding: 8px; width: 60px; border-radius: 4px; }
+    .grid { display: grid; grid-template-columns: repeat(16, 1fr); gap: 6px; margin-top: 20px; }
+    .step { background: #22222b; border: 1px solid #333; height: 65px; color: #fff; cursor: pointer; border-radius: 4px; font-weight: bold; }
+    .step.active { background: #00ff88; color: #000; box-shadow: 0 0 10px rgba(0,255,136,0.5); }
+    .step.current { border: 2px solid #ff0055; }
+  </style>
+</head>
+<body>
+  <h1>Micro-Groovebox V1</h1>
+  <p>Clique sur les pas pour programmer la ligne de basse, puis clique sur Play.</p>
+  
+  <div class="controls">
+    <button id="playBtn">▶ PLAY</button>
+    <label>BPM: <input type="number" id="bpm" value="124" min="60" max="200"></label>
+  </div>
+
+  <div class="grid" id="sequencer"></div>
+
+  <script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let isPlaying = false;
+    let currentStep = 0;
+    let nextNoteTime = 0;
+    let timerId = null;
+    const steps = new Array(16).fill(false);
+
+    // Génération de l'interface du séquenceur
+    const seqEl = document.getElementById('sequencer');
+    steps.forEach((_, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'step';
+      btn.innerText = (i + 1).toString().padStart(2, '0');
+      btn.onclick = () => {
+        steps[i] = !steps[i];
+        btn.classList.toggle('active', steps[i]);
+      };
+      seqEl.appendChild(btn);
+    });
+
+    // Synthétiseur de Bassline (Oscillateur + Filtre ZDF rudimentaire + Enveloppes)
+    function playBassline(time) {
+      const osc = audioCtx.createOscillator();
+      const filter = audioCtx.createBiquadFilter();
+      const amp = audioCtx.createGain();
+
+      // Forme d'onde et note (A1 = 55Hz)
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(55, time);
+
+      // Enveloppe de filtre (Le "pluck" analogique)
+      filter.type = 'lowpass';
+      filter.Q.value = 6; // Résonance
+      filter.frequency.setValueAtTime(1800, time);
+      filter.frequency.exponentialRampToValueAtTime(120, time + 0.12);
+
+      // Enveloppe d'amplitude (Decay exponentiel)
+      amp.gain.setValueAtTime(0.7, time);
+      amp.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
+
+      // Routage
+      osc.connect(filter);
+      filter.connect(amp);
+      amp.connect(audioCtx.destination);
+
+      osc.start(time);
+      osc.stop(time + 0.15);
+    }
+
+    // Horloge haute précision (Lookahead Scheduler)
+    function scheduler() {
+      while (nextNoteTime < audioCtx.currentTime + 0.1) {
+        if (steps[currentStep]) {
+          playBassline(nextNoteTime);
+        }
+        highlightStep(currentStep);
+        const bpm = parseFloat(document.getElementById('bpm').value);
+        const secondsPerStep = (60 / bpm) / 4; // 16th notes
+        nextNoteTime += secondsPerStep;
+        currentStep = (currentStep + 1) % 16;
+      }
+      timerId = setTimeout(scheduler, 25);
+    }
+
+    function highlightStep(stepIdx) {
+      const buttons = seqEl.children;
+      Array.from(buttons).forEach((btn, idx) => {
+        btn.classList.toggle('current', idx === stepIdx);
+      });
+    }
+
+    document.getElementById('playBtn').onclick = () => {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      isPlaying = !isPlaying;
+      if (isPlaying) {
+        currentStep = 0;
+        nextNoteTime = audioCtx.currentTime;
+        scheduler();
+        document.getElementById('playBtn').innerText = '⏸ PAUSE';
+      } else {
+        clearTimeout(timerId);
+        document.getElementById('playBtn').innerText = '▶ PLAY';
+      }
+    };
+  </script>
+</body>
+</html>
